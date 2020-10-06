@@ -25,14 +25,6 @@ const CircleShadowsWall = p => {
         p.resizeCanvas(w, h);
     };
 
-    // p.getCanvasId = () =>{
-    //     return p.canvas.id;
-    // };
-
-    // p.getCanvas = () => {
-    //     return p.canvas;
-    // };
-
     p.setup = () => {
         p.createCanvas(w, h);
         p.background(bgColor.r, bgColor.g, bgColor.b);

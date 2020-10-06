@@ -62,7 +62,8 @@ const OffsetQuadsWall = p => {
       };
 
       p.render = () =>{
-        p.createCanvas(w, h);//size(w, h);
+        //size(w, h);
+        p.createCanvas(w, h);
         p.pixelDensity(2);
         p.background(255);
       
@@ -153,17 +154,7 @@ const OffsetQuadsWall = p => {
         sep_x = grid_x_pixels * 1.0 / (grid_x - 1);
         sep_y = grid_y_pixels * 1.0 / (grid_y - 1);
 
-        if (isStatic){
-            p.setup = () =>{
-                p.render();
-            };
-        }
-        else{
-            p.frameRate(fps);
-            p.draw = () =>{
-                p.render();
-            };
-        }
+        P5Utility.switchStaticOrFrames(p, isStatic, fps);
 
         p.resizeCanvas(w, h);
     };

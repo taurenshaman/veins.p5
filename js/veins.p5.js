@@ -47,7 +47,8 @@ const WatercolorClouds = p => {
         const minshapes = 20, maxshapes = 25;
         const shapealpha = 0.02;
         ColorUtility.generateColors(p, colors, 0.4, 0.75, 15);
-        p.createCanvas(w, h);
+        if (!p.canvas)
+            p.createCanvas(w, h);
         p.strokeWeight(1);
         let start = -p.int(p.height * .2), end = p.int(p.height * 1.2);
         for (let i = start; i < end; i += 60) {
@@ -84,17 +85,7 @@ const WatercolorClouds = p => {
     p.updateSettings = (canvasWidth, canvasHeight, isStatic = false, fps = 30) => {
         w = canvasWidth;
         h = canvasHeight;
-        if (isStatic) {
-            p.setup = () => {
-                p.render();
-            };
-        }
-        else {
-            p.frameRate(fps);
-            p.draw = () => {
-                p.render();
-            };
-        }
+        P5Utility.switchStaticOrFrames(p, isStatic, fps);
         p.resizeCanvas(w, h);
     };
 };
@@ -145,6 +136,21 @@ class CommonUtitlity {
         return hash;
     }
 }
+class P5Utility {
+    static switchStaticOrFrames(p5Obj, isStatic, fps) {
+        if (isStatic) {
+            p5Obj.setup = () => {
+                p5Obj.render();
+            };
+        }
+        else {
+            p5Obj.frameRate(fps);
+            p5Obj.draw = () => {
+                p5Obj.render();
+            };
+        }
+    }
+}
 class ShapeUtility {
     static createPoint(x, y) {
         return {
@@ -181,7 +187,8 @@ const CircleShadowsWall = p => {
         p.resizeCanvas(w, h);
     };
     p.setup = () => {
-        p.createCanvas(w, h);
+        if (!p.canvas)
+            p.createCanvas(w, h);
         p.background(bgColor.r, bgColor.g, bgColor.b);
         p.pixelDensity(2);
         const count = w * 2;
@@ -243,7 +250,8 @@ const OffsetQuadsWall = p => {
         p.draw_rect(x, y, x_s, y_s, d, -1, o, f);
     };
     p.render = () => {
-        p.createCanvas(w, h);
+        if (!p.canvas)
+            p.createCanvas(w, h);
         p.pixelDensity(2);
         p.background(255);
         p.strokeWeight(2);
@@ -322,17 +330,86 @@ const OffsetQuadsWall = p => {
         grid_y_pixels = .9 * h;
         sep_x = grid_x_pixels * 1.0 / (grid_x - 1);
         sep_y = grid_y_pixels * 1.0 / (grid_y - 1);
-        if (isStatic) {
-            p.setup = () => {
-                p.render();
-            };
+        P5Utility.switchStaticOrFrames(p, isStatic, fps);
+        p.resizeCanvas(w, h);
+    };
+};
+const SimulatedCodeWall = p => {
+    let w = 1000, h = 1000;
+    let code_start = h / 60;
+    let code_end = h - h / 100;
+    let code_size = 10;
+    let min_segments = 5;
+    let max_segments = 16;
+    let min_segment_length = 5;
+    let max_segment_length = 60;
+    let segment_sep = 20;
+    let code_lines = 60;
+    let code_sep = (code_end - code_start) / code_lines;
+    let line_break_chance = .4;
+    let indent_size = 50;
+    let max_indents = 6;
+    let indent_inc_chance = .4;
+    let indent_dec_chance = .3;
+    let random_colors = false;
+    let change_chance = .4;
+    let colors = [ColorUtility.createRGBColor(92, 97, 130),
+        ColorUtility.createRGBColor(79, 164, 165),
+        ColorUtility.createRGBColor(202, 166, 122),
+        ColorUtility.createRGBColor(212, 117, 100)];
+    let bc = ColorUtility.createRGBColor(30, 30, 30);
+    p.set_random_color = () => {
+        const c = ColorUtility.createRGBColor(p.random(50, 200), p.random(50, 200), p.random(50, 200));
+        p.stroke(c);
+    };
+    p.set_palette_color = () => {
+        const c = colors[p.int(p.random(colors.length))];
+        p.stroke(c.r, c.g, c.b);
+    };
+    p.render = () => {
+        p.pixelDensity(2);
+        p.createCanvas(w, h);
+        p.background(bc.r, bc.g, bc.b);
+        p.strokeCap(p.ROUND);
+        p.strokeWeight(code_size);
+        if (random_colors)
+            p.set_random_color();
+        else
+            p.set_palette_color();
+        let line_y = code_start;
+        let indent = 0;
+        for (let i = 0; i < code_lines; i++) {
+            line_y += code_sep;
+            let check = p.random(1) < line_break_chance && indent === 0;
+            if (!check) {
+                let line_x = indent_size + (indent * indent_size);
+                let line_segments = p.int(p.random(min_segments, max_segments));
+                for (let j = 0; j < line_segments; j++) {
+                    if (p.random(1) < change_chance)
+                        p.set_palette_color();
+                    let segment_length = p.random(min_segment_length, max_segment_length);
+                    p.line(line_x, line_y, line_x + segment_length, line_y);
+                    line_x = line_x + segment_length + segment_sep;
+                }
+                if (p.random(1) < indent_inc_chance && indent < max_indents)
+                    indent += 1;
+                else if (p.random(1) < indent_dec_chance && indent > 0) {
+                    indent -= p.int(p.random(1, max_indents));
+                    if (indent < 0)
+                        indent = 0;
+                }
+            }
         }
-        else {
-            p.frameRate(fps);
-            p.draw = () => {
-                p.render();
-            };
-        }
+        p.seed = p.int(p.random(10000));
+    };
+    p.updateSettings = (canvasWidth, canvasHeight, isStatic = false, fps = 30, randomColors = false) => {
+        w = canvasWidth;
+        h = canvasHeight;
+        code_start = h / 60;
+        code_end = h - h / 100;
+        code_sep = (code_end - code_start) / code_lines;
+        random_colors = randomColors;
+        P5Utility.switchStaticOrFrames(p, isStatic, fps);
         p.resizeCanvas(w, h);
     };
 };

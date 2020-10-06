@@ -68,7 +68,8 @@ const WatercolorClouds = p => {
 
         ColorUtility.generateColors(p, colors, 0.4, 0.75, 15);
 
-        p.createCanvas(w, h);
+        if(!p.canvas)
+            p.createCanvas(w, h);
         // cr.set_source_rgb(.9, .9, .9) cr.rectangle(0, 0, width, height)  cr.fill()
         // fill(.9, .9, .9);
         // rect(0, 0, width, height);
@@ -120,17 +121,9 @@ const WatercolorClouds = p => {
     p.updateSettings = (canvasWidth, canvasHeight, isStatic = false, fps = 30) => {
         w = canvasWidth;
         h = canvasHeight;
-        if (isStatic){
-            p.setup = () =>{
-                p.render();
-            };
-        }
-        else{
-            p.frameRate(fps);
-            p.draw = () =>{
-                p.render();
-            };
-        }
+
+        P5Utility.switchStaticOrFrames(p, isStatic, fps);
+        
         p.resizeCanvas(w, h);
     };
 

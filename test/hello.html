@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
     <script src="https://taurenshaman.github.io/assets/js/lodash-uuid.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
-    <script src="../js/veins.p5.js?v=6"></script>
+    <script src="../js/veins.p5.js?v=7"></script>
 
 </head>
 
@@ -32,8 +32,11 @@
         // let p5Instance = new p5(WatercolorClouds, "container");
         // p5Instance.updateSettings(container.clientWidth, container.clientHeight, false);
 
-        let p5Instance = new p5(OffsetQuadsWall, "container");
-        p5Instance.updateSettings(container.clientWidth, container.clientHeight, false, 1);
+        // let p5Instance = new p5(OffsetQuadsWall, "container");
+        // p5Instance.updateSettings(container.clientWidth, container.clientHeight, false, 1);
+
+        let p5Instance = new p5(SimulatedCodeWall, "container");
+        p5Instance.updateSettings(container.clientWidth, container.clientHeight, false, 2, false);
     </script>
 </body>
 
