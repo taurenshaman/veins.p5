@@ -117,7 +117,7 @@ const WatercolorClouds = p => {
         } // for i
     };
 
-    p.updateSettings = (canvasWidth, canvasHeight, isStatic = false) => {
+    p.updateSettings = (canvasWidth, canvasHeight, isStatic = false, fps = 30) => {
         w = canvasWidth;
         h = canvasHeight;
         if (isStatic){
@@ -126,6 +126,7 @@ const WatercolorClouds = p => {
             };
         }
         else{
+            p.frameRate(fps);
             p.draw = () =>{
                 p.render();
             };

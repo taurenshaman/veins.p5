@@ -29,8 +29,25 @@ class ColorUtility {
      * @param b 0-100
      * @param a 0-1
      */
-    public static toRGBAPercentageString(r, g, b, a){
+    public static toRGBAPercentageString(r, g, b, a) {
         return "rgba(" + r + "%," + g + "%," + b + "%," + a + ")";
+    }
+
+    public static createRGBAColor(r, g, b, a) {
+        return {
+            r: r,
+            g: g,
+            b: b,
+            a: a
+        };
+    }
+
+    public static createRGBColor(r, g, b) {
+        return {
+            r: r,
+            g: g,
+            b: b
+        };
     }
 
 }
