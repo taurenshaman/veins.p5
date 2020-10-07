@@ -82,95 +82,13 @@ const WatercolorClouds = p => {
             }
         }
     };
-    p.updateSettings = (canvasWidth, canvasHeight, isStatic = false, fps = 30) => {
-        w = canvasWidth;
-        h = canvasHeight;
-        P5Utility.switchStaticOrFrames(p, isStatic, fps);
+    p.updateSettings = (settings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
+        P5Utility.switchStaticOrFrames(p, settings.isStatic, settings.fps);
         p.resizeCanvas(w, h);
     };
 };
-class ColorUtility {
-    static generateRGBColor(p5Instance, min, max) {
-        return {
-            r: p5Instance.random(min, max),
-            g: p5Instance.random(min, max),
-            b: p5Instance.random(min, max),
-        };
-    }
-    static generateColors(p5Instance, colors, min, max, count) {
-        for (let i = 0; i < count; i++) {
-            const c = ColorUtility.generateRGBColor(p5Instance, min, max);
-            colors.push(c);
-        }
-    }
-    static toRGBAPercentageString(r, g, b, a) {
-        return "rgba(" + r + "%," + g + "%," + b + "%," + a + ")";
-    }
-    static createRGBAColor(r, g, b, a) {
-        return {
-            r: r,
-            g: g,
-            b: b,
-            a: a
-        };
-    }
-    static createRGBColor(r, g, b) {
-        return {
-            r: r,
-            g: g,
-            b: b
-        };
-    }
-}
-class CommonUtitlity {
-    static ComputeHash(str) {
-        var hash = 0;
-        if (str.length === 0) {
-            return hash;
-        }
-        for (var i = 0; i < str.length; i++) {
-            var char = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash;
-        }
-        return hash;
-    }
-}
-class P5Utility {
-    static switchStaticOrFrames(p5Obj, isStatic, fps) {
-        if (isStatic) {
-            p5Obj.setup = () => {
-                p5Obj.render();
-            };
-        }
-        else {
-            p5Obj.frameRate(fps);
-            p5Obj.draw = () => {
-                p5Obj.render();
-            };
-        }
-    }
-}
-class ShapeUtility {
-    static createPoint(x, y) {
-        return {
-            x: x,
-            y: y
-        };
-    }
-}
-class StringUtility {
-    static EscapeSpecialChars(str) {
-        return str.replace(/\\n/g, "\\n")
-            .replace(/\\'/g, "\\'")
-            .replace(/\\"/g, '\\"')
-            .replace(/\\&/g, "\\&")
-            .replace(/\\r/g, "\\r")
-            .replace(/\\t/g, "\\t")
-            .replace(/\\b/g, "\\b")
-            .replace(/\\f/g, "\\f");
-    }
-}
 const CircleShadowsWall = p => {
     let w = 1000, h = 1000;
     let bgColor = {
@@ -179,16 +97,15 @@ const CircleShadowsWall = p => {
         b: 255
     };
     const cs = 40;
-    p.updateSettings = (canvasWidth, canvasHeight, bgRGB) => {
-        w = canvasWidth;
-        h = canvasHeight;
-        if (bgRGB)
-            bgColor = bgRGB;
+    p.updateSettings = (settings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
+        if (settings.backgroundRGB)
+            bgColor = settings.backgroundRGB;
         p.resizeCanvas(w, h);
     };
     p.setup = () => {
-        if (!p.canvas)
-            p.createCanvas(w, h);
+        p.createCanvas(w, h);
         p.background(bgColor.r, bgColor.g, bgColor.b);
         p.pixelDensity(2);
         const count = w * 2;
@@ -250,8 +167,7 @@ const OffsetQuadsWall = p => {
         p.draw_rect(x, y, x_s, y_s, d, -1, o, f);
     };
     p.render = () => {
-        if (!p.canvas)
-            p.createCanvas(w, h);
+        p.createCanvas(w, h);
         p.pixelDensity(2);
         p.background(255);
         p.strokeWeight(2);
@@ -323,14 +239,14 @@ const OffsetQuadsWall = p => {
             current_x += sep_x;
         }
     };
-    p.updateSettings = (canvasWidth, canvasHeight, isStatic = false, fps = 30) => {
-        w = canvasWidth;
-        h = canvasHeight;
+    p.updateSettings = (settings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
         grid_x_pixels = .9 * w;
         grid_y_pixels = .9 * h;
         sep_x = grid_x_pixels * 1.0 / (grid_x - 1);
         sep_y = grid_y_pixels * 1.0 / (grid_y - 1);
-        P5Utility.switchStaticOrFrames(p, isStatic, fps);
+        P5Utility.switchStaticOrFrames(p, settings.isStatic, settings.fps);
         p.resizeCanvas(w, h);
     };
 };
@@ -402,15 +318,127 @@ const SimulatedCodeWall = p => {
         }
         p.seed = p.int(p.random(10000));
     };
-    p.updateSettings = (canvasWidth, canvasHeight, isStatic = false, fps = 30, randomColors = false) => {
-        w = canvasWidth;
-        h = canvasHeight;
+    p.updateSettings = (settings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
         code_start = h / 60;
         code_end = h - h / 100;
         code_sep = (code_end - code_start) / code_lines;
-        random_colors = randomColors;
-        P5Utility.switchStaticOrFrames(p, isStatic, fps);
+        random_colors = settings.randomColors;
+        P5Utility.switchStaticOrFrames(p, settings.isStatic, settings.fps);
         p.resizeCanvas(w, h);
     };
 };
+class GeneratorFactory {
+    static getRandomLiving() {
+        return CommonUtitlity.getRandomElement(GeneratorFactory.Livings);
+    }
+    static getRandomSky() {
+        return CommonUtitlity.getRandomElement(GeneratorFactory.Skys);
+    }
+    static getRandomWall() {
+        return CommonUtitlity.getRandomElement(GeneratorFactory.Walls);
+    }
+}
+GeneratorFactory.Livings = [];
+GeneratorFactory.Skys = [WatercolorClouds];
+GeneratorFactory.Walls = [CircleShadowsWall, OffsetQuadsWall, SimulatedCodeWall];
+class GeneratorSettings {
+    constructor() {
+        this.canvasWidth = 1000;
+        this.canvasHeight = 1000;
+        this.isStatic = false;
+        this.fps = 30;
+        this.randomColors = false;
+    }
+}
+class ColorUtility {
+    static generateRGBColor(p5Instance, min, max) {
+        return {
+            r: p5Instance.random(min, max),
+            g: p5Instance.random(min, max),
+            b: p5Instance.random(min, max),
+        };
+    }
+    static generateColors(p5Instance, colors, min, max, count) {
+        for (let i = 0; i < count; i++) {
+            const c = ColorUtility.generateRGBColor(p5Instance, min, max);
+            colors.push(c);
+        }
+    }
+    static toRGBAPercentageString(r, g, b, a) {
+        return "rgba(" + r + "%," + g + "%," + b + "%," + a + ")";
+    }
+    static createRGBAColor(r, g, b, a) {
+        return {
+            r: r,
+            g: g,
+            b: b,
+            a: a
+        };
+    }
+    static createRGBColor(r, g, b) {
+        return {
+            r: r,
+            g: g,
+            b: b
+        };
+    }
+}
+class CommonUtitlity {
+    static ComputeHash(str) {
+        var hash = 0;
+        if (str.length === 0) {
+            return hash;
+        }
+        for (var i = 0; i < str.length; i++) {
+            var char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+        return hash;
+    }
+    static getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+    static getRandomElement(list) {
+        const index = CommonUtitlity.getRandomInt(list.length - 1);
+        return list[index];
+    }
+}
+class P5Utility {
+    static switchStaticOrFrames(p5Obj, isStatic, fps) {
+        if (isStatic) {
+            p5Obj.setup = () => {
+                p5Obj.render();
+            };
+        }
+        else {
+            p5Obj.frameRate(fps);
+            p5Obj.draw = () => {
+                p5Obj.render();
+            };
+        }
+    }
+}
+class ShapeUtility {
+    static createPoint(x, y) {
+        return {
+            x: x,
+            y: y
+        };
+    }
+}
+class StringUtility {
+    static EscapeSpecialChars(str) {
+        return str.replace(/\\n/g, "\\n")
+            .replace(/\\'/g, "\\'")
+            .replace(/\\"/g, '\\"')
+            .replace(/\\&/g, "\\&")
+            .replace(/\\r/g, "\\r")
+            .replace(/\\t/g, "\\t")
+            .replace(/\\b/g, "\\b")
+            .replace(/\\f/g, "\\f");
+    }
+}
 //# sourceMappingURL=veins.p5.js.map

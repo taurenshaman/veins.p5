@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
     <!-- Site Properties -->
-    <title>LoreCard | https://lore.chuci.info</title>
+    <title>Generative Art | https://veins.design</title>
 
     <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
 
@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
     <script src="https://taurenshaman.github.io/assets/js/lodash-uuid.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
-    <script src="../js/veins.p5.js?v=7"></script>
+    <script src="../js/veins.p5.js?v=9"></script>
 
 </head>
 
@@ -25,18 +25,30 @@
     <div id="container" class="w-100 h-vh-100"></div>
     <script>
         const container = document.getElementById("container");
+        const settings = {
+            canvasWidth: container.clientWidth,
+            canvasHeight: container.clientHeight,
+            isStatic: false,
+            fps: 2,
+            randomColors: false
+        };
         
         // let p5Instance = new p5(CircleShadowsWall, "container");
-        // p5Instance.updateSettings(container.clientWidth, container.clientHeight, {r: 220, g: 220, b: 220});
+        // settings.backgroundRGB = {r: 220, g: 220, b: 220};
+        // p5Instance.updateSettings(settings);
 
         // let p5Instance = new p5(WatercolorClouds, "container");
-        // p5Instance.updateSettings(container.clientWidth, container.clientHeight, false);
+        // p5Instance.updateSettings(settings);
 
         // let p5Instance = new p5(OffsetQuadsWall, "container");
-        // p5Instance.updateSettings(container.clientWidth, container.clientHeight, false, 1);
+        // p5Instance.updateSettings(settings);
 
-        let p5Instance = new p5(SimulatedCodeWall, "container");
-        p5Instance.updateSettings(container.clientWidth, container.clientHeight, false, 2, false);
+        // let p5Instance = new p5(SimulatedCodeWall, "container");
+        // p5Instance.updateSettings(settings);
+
+        let generator = GeneratorFactory.getRandomWall();
+        let p5Instance = new p5(generator, "container");
+        p5Instance.updateSettings(settings);
     </script>
 </body>
 

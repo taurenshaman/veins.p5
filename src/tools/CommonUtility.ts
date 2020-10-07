@@ -14,4 +14,17 @@ class CommonUtitlity {
         return hash;
     }
 
+    /**
+     * return a integer number less than max
+     * @param max 
+     */
+    static getRandomInt(max: number) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+
+    static getRandomElement(list) {
+        const index = CommonUtitlity.getRandomInt(list.length - 1);
+        return list[index];
+    }
+
 }
