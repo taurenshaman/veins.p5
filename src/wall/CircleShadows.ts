@@ -17,11 +17,11 @@ const CircleShadowsWall = p => {
     const cs = 40;
 
 
-    p.updateSettings = (canvasWidth, canvasHeight, bgRGB) => {
-        w = canvasWidth;
-        h = canvasHeight;
-        if (bgRGB)
-            bgColor = bgRGB;
+    p.updateSettings = (settings: GeneratorSettings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
+        if (settings.backgroundRGB)
+            bgColor = settings.backgroundRGB;
         p.resizeCanvas(w, h);
     };
 

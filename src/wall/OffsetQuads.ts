@@ -144,9 +144,9 @@ const OffsetQuadsWall = p => {
         } // for j
       };
 
-      p.updateSettings = (canvasWidth, canvasHeight, isStatic = false, fps = 30) => {
-        w = canvasWidth;
-        h = canvasHeight;
+      p.updateSettings = (settings: GeneratorSettings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
         
         grid_x_pixels = .9 * w;
         grid_y_pixels = .9 * h;
@@ -154,7 +154,7 @@ const OffsetQuadsWall = p => {
         sep_x = grid_x_pixels * 1.0 / (grid_x - 1);
         sep_y = grid_y_pixels * 1.0 / (grid_y - 1);
 
-        P5Utility.switchStaticOrFrames(p, isStatic, fps);
+        P5Utility.switchStaticOrFrames(p, settings.isStatic, settings.fps);
 
         p.resizeCanvas(w, h);
     };

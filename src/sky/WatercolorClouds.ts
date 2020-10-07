@@ -118,11 +118,11 @@ const WatercolorClouds = p => {
         } // for i
     };
 
-    p.updateSettings = (canvasWidth, canvasHeight, isStatic = false, fps = 30) => {
-        w = canvasWidth;
-        h = canvasHeight;
+    p.updateSettings = (settings: GeneratorSettings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
 
-        P5Utility.switchStaticOrFrames(p, isStatic, fps);
+        P5Utility.switchStaticOrFrames(p, settings.isStatic, settings.fps);
         
         p.resizeCanvas(w, h);
     };

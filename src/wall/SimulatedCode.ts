@@ -101,17 +101,17 @@ const SimulatedCodeWall = p => {
         p.seed = p.int(p.random(10000))
     };
 
-    p.updateSettings = (canvasWidth, canvasHeight, isStatic = false, fps = 30, randomColors = false ) => {
-        w = canvasWidth;
-        h = canvasHeight;
+    p.updateSettings = (settings: GeneratorSettings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
         
         code_start = h / 60;
         code_end = h - h / 100;
         code_sep = (code_end - code_start) / code_lines;
 
-        random_colors = randomColors;
+        random_colors = settings.randomColors;
 
-        P5Utility.switchStaticOrFrames(p, isStatic, fps);
+        P5Utility.switchStaticOrFrames(p, settings.isStatic, settings.fps);
 
         p.resizeCanvas(w, h);
     };
