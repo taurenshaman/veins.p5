@@ -61,7 +61,8 @@ const SimulatedCodeWall = p => {
         p.pixelDensity(2);
 
         // Setting the size and background
-        p.createCanvas(w, h);
+        let renderer = p.createCanvas(w, h);
+        P5Utility.placeCanvasTo(p, renderer, true, -10);
         p.background(bc.r, bc.g, bc.b);
 
         // Type of lines and size

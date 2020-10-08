@@ -68,12 +68,13 @@ const WatercolorClouds = p => {
 
         ColorUtility.generateColors(p, colors, 0.4, 0.75, 15);
 
-        if(!p.canvas)
-            p.createCanvas(w, h);
+        let renderer = p.createCanvas(w, h);
+        P5Utility.placeCanvasTo(p, renderer, true, -10);
+
         // cr.set_source_rgb(.9, .9, .9) cr.rectangle(0, 0, width, height)  cr.fill()
         // fill(.9, .9, .9);
         // rect(0, 0, width, height);
-        //background(.9, .9, .9);
+        p.background(.9, .9, .9);
 
         p.strokeWeight(1);
         let start = -p.int(p.height * .2),

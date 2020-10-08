@@ -47,8 +47,9 @@ const WatercolorClouds = p => {
         const minshapes = 20, maxshapes = 25;
         const shapealpha = 0.02;
         ColorUtility.generateColors(p, colors, 0.4, 0.75, 15);
-        if (!p.canvas)
-            p.createCanvas(w, h);
+        let renderer = p.createCanvas(w, h);
+        P5Utility.placeCanvasTo(p, renderer, true, -10);
+        p.background(.9, .9, .9);
         p.strokeWeight(1);
         let start = -p.int(p.height * .2), end = p.int(p.height * 1.2);
         for (let i = start; i < end; i += 60) {
@@ -105,7 +106,8 @@ const CircleShadowsWall = p => {
         p.resizeCanvas(w, h);
     };
     p.setup = () => {
-        p.createCanvas(w, h);
+        let renderer = p.createCanvas(w, h);
+        P5Utility.placeCanvasTo(p, renderer, true, -10);
         p.background(bgColor.r, bgColor.g, bgColor.b);
         p.pixelDensity(2);
         const count = w * 2;
@@ -167,7 +169,8 @@ const OffsetQuadsWall = p => {
         p.draw_rect(x, y, x_s, y_s, d, -1, o, f);
     };
     p.render = () => {
-        p.createCanvas(w, h);
+        let renderer = p.createCanvas(w, h);
+        P5Utility.placeCanvasTo(p, renderer, true, -10);
         p.pixelDensity(2);
         p.background(255);
         p.strokeWeight(2);
@@ -284,7 +287,8 @@ const SimulatedCodeWall = p => {
     };
     p.render = () => {
         p.pixelDensity(2);
-        p.createCanvas(w, h);
+        let renderer = p.createCanvas(w, h);
+        P5Utility.placeCanvasTo(p, renderer, true, -10);
         p.background(bc.r, bc.g, bc.b);
         p.strokeCap(p.ROUND);
         p.strokeWeight(code_size);
@@ -339,10 +343,15 @@ class GeneratorFactory {
     static getRandomWall() {
         return CommonUtitlity.getRandomElement(GeneratorFactory.Walls);
     }
+    static getRandomBackground() {
+        return CommonUtitlity.getRandomElement(GeneratorFactory.Backgrounds);
+    }
 }
 GeneratorFactory.Livings = [];
 GeneratorFactory.Skys = [WatercolorClouds];
 GeneratorFactory.Walls = [CircleShadowsWall, OffsetQuadsWall, SimulatedCodeWall];
+GeneratorFactory.Backgrounds = [WatercolorClouds,
+    OffsetQuadsWall, SimulatedCodeWall];
 class GeneratorSettings {
     constructor() {
         this.canvasWidth = 1000;
@@ -419,6 +428,12 @@ class P5Utility {
                 p5Obj.render();
             };
         }
+    }
+    static placeCanvasTo(p5Obj, renderer, origin, zIndex = 0) {
+        if (origin) {
+            renderer.position(0, 0);
+        }
+        renderer.style("z-index", "" + zIndex);
     }
 }
 class ShapeUtility {

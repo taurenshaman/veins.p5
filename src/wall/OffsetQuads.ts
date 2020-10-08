@@ -62,8 +62,8 @@ const OffsetQuadsWall = p => {
       };
 
       p.render = () =>{
-        //size(w, h);
-        p.createCanvas(w, h);
+        let renderer = p.createCanvas(w, h);
+        P5Utility.placeCanvasTo(p, renderer, true, -10);
         p.pixelDensity(2);
         p.background(255);
       

@@ -26,7 +26,9 @@ const CircleShadowsWall = p => {
     };
 
     p.setup = () => {
-        p.createCanvas(w, h);
+        let renderer = p.createCanvas(w, h);
+        P5Utility.placeCanvasTo(p, renderer, true, -10);
+        
         p.background(bgColor.r, bgColor.g, bgColor.b);
 
         // Take advantage of resolution

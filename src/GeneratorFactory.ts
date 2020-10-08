@@ -20,5 +20,11 @@ class GeneratorFactory {
     static getRandomWall(){
         return CommonUtitlity.getRandomElement(GeneratorFactory.Walls);
     }
+
+    static readonly Backgrounds: Array<Function> = [WatercolorClouds,
+        OffsetQuadsWall, SimulatedCodeWall];
+    static getRandomBackground(){
+        return CommonUtitlity.getRandomElement(GeneratorFactory.Backgrounds);
+    }
     
 }
