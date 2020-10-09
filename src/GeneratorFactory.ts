@@ -1,3 +1,4 @@
+/// <reference path="./living/ErdavidsTree.ts" />
 /// <reference path="./sky/WatercolorClouds.ts" />
 /// <reference path="./wall/CirclePacking.ts" />
 /// <reference path="./wall/CircleShadows.ts" />
@@ -10,7 +11,7 @@
 "use strict";
 
 class GeneratorFactory {
-    // static readonly Livings: Array<Function> = [];
+    // static readonly Livings: Array<Function> = [ErdavidsTree];
     // static getRandomLiving(){
     //     return CommonUtitlity.getRandomElement(GeneratorFactory.Livings);
     // }
@@ -25,7 +26,9 @@ class GeneratorFactory {
     //     return CommonUtitlity.getRandomElement(GeneratorFactory.Walls);
     // }
 
-    static readonly Backgrounds: Array<Function> = [WatercolorClouds,
+    static readonly Backgrounds: Array<Function> = [
+        ErdavidsTree,
+        WatercolorClouds,
         CirclePacking, ElementaryAutomata, MondrianTiles, OffsetQuadsWall, SimulatedCodeWall];
     static getRandomBackground(){
         return CommonUtitlity.getRandomElement(GeneratorFactory.Backgrounds);

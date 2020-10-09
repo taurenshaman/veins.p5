@@ -1,4 +1,146 @@
 "use strict";
+const ErdavidsTree = p => {
+    let w = 1000, h = 1000;
+    const opts = {
+        Iterations: 5,
+        Length: 300,
+        Length_Change: .5,
+        Length_Drift: .05,
+        Angle: 25,
+        Angle_Drift: 5,
+        rule0a: 'F',
+        rule0b: 'Go[-F]S[+G+F*][+F]S[-G-F*]',
+        rule1a: 'G',
+        rule1b: 'G[+F]G[-F]S',
+        Background: [211, 206, 194],
+        Shape: [172, 187, 173],
+        Fruit: [200, 140, 100],
+        Red_Drift: 20,
+        Green_Drift: 20,
+        Blue_Drift: 20,
+        Line_Color: [0, 0, 0],
+        Line_Width: 1,
+        Line_Opacity: 150,
+        Opacity_Drift: 50
+    };
+    let ang;
+    let axiom = "F";
+    let sentence = axiom;
+    let len = opts.Length;
+    let rules = [];
+    rules[0] = {
+        a: opts.rule0a,
+        b: opts.rule0b
+    };
+    rules[1] = {
+        a: opts.rule1a,
+        b: opts.rule1b,
+    };
+    p.updateRules = () => {
+        rules[0] = {
+            a: opts.rule0a,
+            b: opts.rule0b
+        };
+        rules[1] = {
+            a: opts.rule1a,
+            b: opts.rule1b,
+        };
+        len = opts.Length;
+    };
+    p.randomize = () => {
+        p.randomSeed(p.random(10000));
+        p.updateRules();
+        p.setup();
+    };
+    p.turtle = (iter) => {
+        p.background(opts.Background);
+        p.fill(opts.Shape);
+        p.noStroke();
+        p.translate(w / 2, h / 2);
+        p.rotate(p.random(p.PI));
+        p.rect(-200, -200, 400, 400);
+        p.stroke(0, 100);
+        p.resetMatrix();
+        p.translate(w / 2, h);
+        var circle_calls = 0;
+        for (var i = 0; i < sentence.length; i++) {
+            var current = sentence.charAt(i);
+            if (current == 'F' || current == 'G') {
+                p.stroke(opts.Line_Color[0], opts.Line_Color[1], opts.Line_Color[2], opts.Line_Opacity + p.random(-opts.Opacity_Drift, opts.Opacity_Drift));
+                p.line(0, 0, 0, -len);
+                p.translate(0, -len);
+            }
+            else if (current == '+') {
+                ang = p.radians(p.random(opts.Angle - opts.Angle_Drift, opts.Angle + opts.Angle_Drift));
+                p.rotate(ang);
+            }
+            else if (current == '-') {
+                ang = p.radians(p.random(opts.Angle - opts.Angle_Drift, opts.Angle + opts.Angle_Drift));
+                p.rotate(-ang);
+            }
+            else if (current == '[') {
+                p.push();
+            }
+            else if (current == ']') {
+                p.pop();
+            }
+            else if (current == 'S') {
+                p.translate(0, -len / 4);
+            }
+            else if (current == '*') {
+                p.noFill();
+                circle_calls += 1;
+                if (circle_calls > 50 && p.random(1) < .4) {
+                    p.fill(opts.Fruit[0] + p.random(-opts.Red_Drift, opts.Red_Drift), opts.Fruit[1] + p.random(-opts.Green_Drift, opts.Green_Drift), opts.Fruit[2] + p.random(-opts.Blue_Drift, opts.Blue_Drift));
+                    p.circle(0, 0, p.random(4, 13));
+                }
+            }
+        }
+        p.resetMatrix();
+    };
+    p.generate = (iter) => {
+        var nextSentence = "";
+        len *= opts.Length_Change + p.random(-opts.Length_Drift, opts.Length_Drift);
+        for (var i = 0; i < sentence.length; i++) {
+            var current = sentence.charAt(i);
+            var found = false;
+            for (var j = 0; j < rules.length; j++) {
+                if (current == rules[j].a) {
+                    found = true;
+                    nextSentence += rules[j].b;
+                    break;
+                }
+            }
+            if (!found) {
+                nextSentence += current;
+            }
+        }
+        sentence = nextSentence;
+        p.turtle(iter);
+    };
+    p.createPlant = () => {
+        for (var i = 0; i < p.int(opts.Iterations); i++) {
+            p.generate(i);
+        }
+    };
+    p.draw = () => {
+        let renderer = p.createCanvas(w, h);
+        P5Utility.placeCanvasTo(p, renderer, true, -10);
+        p.pixelDensity(2);
+        ang = p.radians(opts.Angle);
+        len = opts.Length;
+        p.strokeWeight(opts.Line_Width);
+        p.background(211, 206, 194);
+        sentence = axiom;
+        p.createPlant();
+    };
+    p.updateSettings = (settings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
+        P5Utility.switchStaticOrFrames(p, settings.isStatic, settings.fps);
+        p.resizeCanvas(w, h);
+    };
+};
 const WatercolorClouds = p => {
     let w = 1000, h = 1000;
     const colors = [];
@@ -296,6 +438,92 @@ const CircleShadowsWall = p => {
             p.fill(p.random(50, 255), p.random(50, 255), p.random(50, 255), p.random(50, 255));
             p.circle(center_x, center_y, cs);
         }
+    };
+};
+const ElementaryAutomata = p => {
+    let w = 1000, h = 1000;
+    const rules = [
+        MathUtility.createMatrixItem(1, 1, 1, 0),
+        MathUtility.createMatrixItem(1, 1, 0, 1),
+        MathUtility.createMatrixItem(1, 0, 1, 0),
+        MathUtility.createMatrixItem(1, 0, 0, 0),
+        MathUtility.createMatrixItem(0, 1, 1, 1),
+        MathUtility.createMatrixItem(0, 1, 0, 0),
+        MathUtility.createMatrixItem(0, 0, 1, 0),
+        MathUtility.createMatrixItem(0, 0, 0, 1)
+    ];
+    let pallete1 = [
+        ColorUtility.createRGBColor(112, 181, 171),
+        ColorUtility.createRGBColor(220, 109, 71),
+        ColorUtility.createRGBColor(240, 204, 170)
+    ];
+    let pallete2 = [
+        ColorUtility.createRGBColor(106, 154, 172),
+        ColorUtility.createRGBColor(146, 189, 144),
+        ColorUtility.createRGBColor(130, 179, 176)
+    ];
+    let backgrounds = [
+        ColorUtility.createRGBColor(243, 236, 205),
+        ColorUtility.createRGBColor(50, 50, 50)
+    ];
+    p.getRule = (x, y, z) => {
+        let index = _.findIndex(rules, r => {
+            return r.x === x && r.y === y && r.z === z;
+        });
+        return rules[index];
+    };
+    p.draw_circle_fill = (x, y, radius, r, g, b) => {
+        p.stroke(r, g, b);
+        p.fill(r, g, b);
+        const wh = radius;
+        p.arc(x, y, wh, wh, 0, 2 * p.PI);
+    };
+    p.getRandomInt1Bit = () => {
+        let data = [1, 2, 4, 8];
+        let index = p.int(p.random(data.length));
+        return p.int(p.random(2));
+    };
+    p.draw = () => {
+        let renderer = p.createCanvas(w, h);
+        P5Utility.placeCanvasTo(p, renderer, true, -10);
+        let number_beziers = 200;
+        let circle_size = 5;
+        let x_d = w / number_beziers;
+        let y_d = x_d;
+        p.background(backgrounds[1].r, backgrounds[1].g, backgrounds[1].b);
+        let current_row = [];
+        for (let i = 0; i < number_beziers; i++) {
+            current_row.push(p.getRandomInt1Bit());
+        }
+        let next_row = [];
+        _.forEach(current_row, item => {
+            next_row.push(item);
+        });
+        for (let k = y_d; k < h; k += y_d) {
+            for (let j = 0; j < current_row.length - 2; j++) {
+                let r = p.getRule(current_row[j], current_row[j + 1], current_row[j + 2]);
+                next_row[j + 1] = r.value;
+            }
+            let r0 = p.getRule(current_row[current_row.length - 1], current_row[0], current_row[1]);
+            next_row[0] = r0.value;
+            let r1 = p.getRule(current_row[current_row.length - 2], current_row[current_row.length - 1], current_row[0]);
+            next_row[next_row.length - 1] = r1.value;
+            for (let i = 1; i < next_row.length; i++) {
+                if (next_row[i] === 1) {
+                    const c = CommonUtitlity.getRandomElement(pallete1);
+                    p.draw_circle_fill(i * x_d, k, circle_size, c.r, c.g, c.b);
+                }
+            }
+            for (let m = 0; m < next_row.length; m++) {
+                current_row[m] = next_row[m];
+            }
+        }
+    };
+    p.updateSettings = (settings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
+        P5Utility.switchStaticOrFrames(p, settings.isStatic, settings.fps);
+        p.resizeCanvas(w, h);
     };
 };
 const MondrianTiles = p => {
@@ -631,8 +859,11 @@ class GeneratorFactory {
         return CommonUtitlity.getRandomElement(GeneratorFactory.Backgrounds);
     }
 }
-GeneratorFactory.Backgrounds = [WatercolorClouds,
-    CirclePacking, MondrianTiles, OffsetQuadsWall, SimulatedCodeWall];
+GeneratorFactory.Backgrounds = [
+    ErdavidsTree,
+    WatercolorClouds,
+    CirclePacking, ElementaryAutomata, MondrianTiles, OffsetQuadsWall, SimulatedCodeWall
+];
 class GeneratorSettings {
     constructor() {
         this.canvasWidth = 1000;
@@ -688,13 +919,46 @@ class CommonUtitlity {
         }
         return hash;
     }
-    static getRandomInt(max) {
-        return Math.floor(Math.random() * Math.floor(max));
+    static getRandomInt(max, min = 0) {
+        let range = max - min;
+        if (range <= 0) {
+            const tmp = max;
+            max = min;
+            min = tmp;
+            range = -range;
+        }
+        var requestBytes = Math.ceil(Math.log2(range) / 8);
+        if (!requestBytes) {
+            return min;
+        }
+        var maxNum = Math.pow(256, requestBytes);
+        var ar = new Uint8Array(requestBytes);
+        while (true) {
+            window.crypto.getRandomValues(ar);
+            var val = 0;
+            for (var i = 0; i < requestBytes; i++) {
+                val = (val << 8) + ar[i];
+            }
+            if (val < maxNum - maxNum % range) {
+                return min + (val % range);
+            }
+        }
     }
     static getRandomElement(list) {
         const index = CommonUtitlity.getRandomInt(list.length - 1);
         return list[index];
     }
+}
+class MathUtility {
+    static createMatrixItem(x, y, z, value) {
+        return {
+            x: x,
+            y: y,
+            z: z,
+            value: value
+        };
+    }
+    ;
 }
 class P5Utility {
     static switchStaticOrFrames(p5Obj, isStatic, fps) {
