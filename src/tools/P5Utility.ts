@@ -18,4 +18,14 @@ class P5Utility {
         
         renderer.style("z-index", "" + zIndex);
     }
+
+    // public static drawBezierUsingRandomColor(p, x, y, x1, y1, x2, y2, x3, y3, colors, strokeWeight = 2){
+    //     const c = CommonUtitlity.getRandomElement(colors);
+
+    //     p.noFill();
+    //     p.strokeWeight(strokeWeight);
+
+    //     p.stroke(c.r, c.g, c.b);
+    //     p.bezier(x, y, x1, y1, x2, y2, x3, y3);
+    // }
 }
