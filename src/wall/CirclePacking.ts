@@ -153,7 +153,7 @@ const CirclePacking = p => {
       p.circle(cir.position.x, cir.position.y, cir.size);
     };
     
-    p.render = () =>{
+    p.draw = () =>{
       let renderer = p.createCanvas(w, h);
       P5Utility.placeCanvasTo(p, renderer, true, -10);
 

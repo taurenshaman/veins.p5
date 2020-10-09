@@ -7,20 +7,20 @@
 "use strict";
 
 class GeneratorFactory {
-    static readonly Livings: Array<Function> = [];
-    static getRandomLiving(){
-        return CommonUtitlity.getRandomElement(GeneratorFactory.Livings);
-    }
+    // static readonly Livings: Array<Function> = [];
+    // static getRandomLiving(){
+    //     return CommonUtitlity.getRandomElement(GeneratorFactory.Livings);
+    // }
 
-    static readonly Skys: Array<Function> = [WatercolorClouds];
-    static getRandomSky(){
-        return CommonUtitlity.getRandomElement(GeneratorFactory.Skys);
-    }
+    // static readonly Skys: Array<Function> = [WatercolorClouds];
+    // static getRandomSky(){
+    //     return CommonUtitlity.getRandomElement(GeneratorFactory.Skys);
+    // }
 
-    static readonly Walls: Array<Function> = [CirclePacking, CircleShadowsWall, OffsetQuadsWall, SimulatedCodeWall];
-    static getRandomWall(){
-        return CommonUtitlity.getRandomElement(GeneratorFactory.Walls);
-    }
+    // static readonly Walls: Array<Function> = [CirclePacking, CircleShadowsWall, OffsetQuadsWall, SimulatedCodeWall];
+    // static getRandomWall(){
+    //     return CommonUtitlity.getRandomElement(GeneratorFactory.Walls);
+    // }
 
     static readonly Backgrounds: Array<Function> = [WatercolorClouds,
         CirclePacking, OffsetQuadsWall, SimulatedCodeWall];

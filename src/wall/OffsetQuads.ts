@@ -61,7 +61,7 @@ const OffsetQuadsWall = p => {
         p.draw_rect(x, y, x_s, y_s, d, -1, o, f);
       };
 
-      p.render = () =>{
+      p.draw = () =>{
         let renderer = p.createCanvas(w, h);
         P5Utility.placeCanvasTo(p, renderer, true, -10);
         p.pixelDensity(2);

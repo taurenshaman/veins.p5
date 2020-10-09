@@ -59,7 +59,7 @@ const WatercolorClouds = p => {
         return shape;
     };
 
-    p.render = () => {
+    p.draw = () => {
         const initial = 120;
         const deviation = 50;
         const basedeforms = 1, finaldeforms = 3;

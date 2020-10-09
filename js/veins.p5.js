@@ -40,7 +40,7 @@ const WatercolorClouds = p => {
         }
         return shape;
     };
-    p.render = () => {
+    p.draw = () => {
         const initial = 120;
         const deviation = 50;
         const basedeforms = 1, finaldeforms = 3;
@@ -225,7 +225,7 @@ const CirclePacking = p => {
         p.fill(color.r, color.g, color.b);
         p.circle(cir.position.x, cir.position.y, cir.size);
     };
-    p.render = () => {
+    p.draw = () => {
         let renderer = p.createCanvas(w, h);
         P5Utility.placeCanvasTo(p, renderer, true, -10);
         p.pixelDensity(2);
@@ -341,7 +341,7 @@ const OffsetQuadsWall = p => {
         const f = p.get_random_element(colors);
         p.draw_rect(x, y, x_s, y_s, d, -1, o, f);
     };
-    p.render = () => {
+    p.draw = () => {
         let renderer = p.createCanvas(w, h);
         P5Utility.placeCanvasTo(p, renderer, true, -10);
         p.pixelDensity(2);
@@ -458,7 +458,7 @@ const SimulatedCodeWall = p => {
         const c = colors[p.int(p.random(colors.length))];
         p.stroke(c.r, c.g, c.b);
     };
-    p.render = () => {
+    p.draw = () => {
         p.pixelDensity(2);
         let renderer = p.createCanvas(w, h);
         P5Utility.placeCanvasTo(p, renderer, true, -10);
@@ -507,22 +507,10 @@ const SimulatedCodeWall = p => {
     };
 };
 class GeneratorFactory {
-    static getRandomLiving() {
-        return CommonUtitlity.getRandomElement(GeneratorFactory.Livings);
-    }
-    static getRandomSky() {
-        return CommonUtitlity.getRandomElement(GeneratorFactory.Skys);
-    }
-    static getRandomWall() {
-        return CommonUtitlity.getRandomElement(GeneratorFactory.Walls);
-    }
     static getRandomBackground() {
         return CommonUtitlity.getRandomElement(GeneratorFactory.Backgrounds);
     }
 }
-GeneratorFactory.Livings = [];
-GeneratorFactory.Skys = [WatercolorClouds];
-GeneratorFactory.Walls = [CirclePacking, CircleShadowsWall, OffsetQuadsWall, SimulatedCodeWall];
 GeneratorFactory.Backgrounds = [WatercolorClouds,
     CirclePacking, OffsetQuadsWall, SimulatedCodeWall];
 class GeneratorSettings {
@@ -591,15 +579,11 @@ class CommonUtitlity {
 class P5Utility {
     static switchStaticOrFrames(p5Obj, isStatic, fps) {
         if (isStatic) {
-            p5Obj.setup = () => {
-                p5Obj.render();
-            };
+            p5Obj.noLoop();
         }
         else {
             p5Obj.frameRate(fps);
-            p5Obj.draw = () => {
-                p5Obj.render();
-            };
+            p5Obj.loop();
         }
     }
     static placeCanvasTo(p5Obj, renderer, origin, zIndex = 0) {

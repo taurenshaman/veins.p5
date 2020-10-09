@@ -1,7 +1,6 @@
 "use strict";
 
-// namespace Veins.Art.Wall {
-// }
+// TODO
 // Ref: https://github.com/erdavids/Circle-Shadows/blob/master/Circle_Tutorial.pyde
 
 const CircleShadowsWall = p => {

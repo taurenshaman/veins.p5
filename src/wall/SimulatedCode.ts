@@ -56,7 +56,7 @@ const SimulatedCodeWall = p => {
         p.stroke(c.r, c.g, c.b);
     };
 
-    p.render = () => {
+    p.draw = () => {
         // Take advantage of resolution
         p.pixelDensity(2);
 
