@@ -7,4 +7,14 @@ class ShapeUtility {
             y: y
         };
     }
+
+    public static createCircle(size, posX = 0, posY = 0){
+        return {
+          size: size,
+          position: {
+            x: posX,
+            y: posY
+          }
+        };
+      }
 }

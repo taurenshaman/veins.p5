@@ -1,4 +1,5 @@
 /// <reference path="./sky/WatercolorClouds.ts" />
+/// <reference path="./wall/CirclePacking.ts" />
 /// <reference path="./wall/CircleShadows.ts" />
 /// <reference path="./wall/OffsetQuads.ts" />
 /// <reference path="./wall/SimulatedCode.ts" />
@@ -16,13 +17,13 @@ class GeneratorFactory {
         return CommonUtitlity.getRandomElement(GeneratorFactory.Skys);
     }
 
-    static readonly Walls: Array<Function> = [CircleShadowsWall, OffsetQuadsWall, SimulatedCodeWall];
+    static readonly Walls: Array<Function> = [CirclePacking, CircleShadowsWall, OffsetQuadsWall, SimulatedCodeWall];
     static getRandomWall(){
         return CommonUtitlity.getRandomElement(GeneratorFactory.Walls);
     }
 
     static readonly Backgrounds: Array<Function> = [WatercolorClouds,
-        OffsetQuadsWall, SimulatedCodeWall];
+        CirclePacking, OffsetQuadsWall, SimulatedCodeWall];
     static getRandomBackground(){
         return CommonUtitlity.getRandomElement(GeneratorFactory.Backgrounds);
     }

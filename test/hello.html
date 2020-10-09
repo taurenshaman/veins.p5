@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
     <script src="https://taurenshaman.github.io/assets/js/lodash-uuid.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
-    <script src="../js/veins.p5.js?v=9"></script>
+    <script src="../js/veins.p5.js?v=10"></script>
 
 </head>
 
@@ -46,9 +46,12 @@
         // let p5Instance = new p5(SimulatedCodeWall, "container");
         // p5Instance.updateSettings(settings);
 
-        let generator = GeneratorFactory.getRandomWall();
-        let p5Instance = new p5(generator, "container");
+        let p5Instance = new p5(CirclePacking, "container");
         p5Instance.updateSettings(settings);
+
+        // let generator = GeneratorFactory.getRandomWall();
+        // let p5Instance = new p5(generator, "container");
+        // p5Instance.updateSettings(settings);
     </script>
 </body>
 
