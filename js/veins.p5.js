@@ -298,6 +298,89 @@ const CircleShadowsWall = p => {
         }
     };
 };
+const MondrianTiles = p => {
+    let w = 1000, h = 1000;
+    const subdivisions = 50000;
+    const min_diff = 80;
+    const sep = 1;
+    const colors = [ColorUtility.createRGBColor(38, 71, 124),
+        ColorUtility.createRGBColor(240, 217, 92),
+        ColorUtility.createRGBColor(162, 45, 40),
+        ColorUtility.createRGBColor(223, 224, 236),
+        ColorUtility.createRGBColor(223, 224, 236),
+        ColorUtility.createRGBColor(223, 224, 236),
+        ColorUtility.createRGBColor(223, 224, 236),
+        ColorUtility.createRGBColor(223, 224, 236)];
+    const splits = [.5, 1, 1.5];
+    const edge = 10;
+    p.draw = () => {
+        let renderer = p.createCanvas(w, h);
+        P5Utility.placeCanvasTo(p, renderer, true, -10);
+        p.pixelDensity(2);
+        p.background(255);
+        const quads = [];
+        p.append(quads, [
+            ShapeUtility.createPoint(edge, edge),
+            ShapeUtility.createPoint(w - edge, edge),
+            ShapeUtility.createPoint(w - edge, h - edge),
+            ShapeUtility.createPoint(edge, h - edge)
+        ]);
+        for (let i = 0; i < subdivisions; i++) {
+            let q_index = p.int(p.random(quads.length));
+            let q = quads[q_index];
+            let q_lx = q[0].x;
+            let q_rx = q[1].x;
+            let q_ty = q[0].y;
+            let q_by = q[2].y;
+            let s = splits[p.int(p.random(splits.length))];
+            if (p.random(1) < .5) {
+                if ((q_rx - q_lx) > min_diff) {
+                    let x_split = (q_rx - q_lx) / 2 * s + q_lx;
+                    _.pullAt(quads, [q_index]);
+                    p.append(quads, [ShapeUtility.createPoint(q_lx, q_ty),
+                        ShapeUtility.createPoint(x_split - sep, q_ty),
+                        ShapeUtility.createPoint(x_split - sep, q_by),
+                        ShapeUtility.createPoint(q_lx, q_by)]);
+                    p.append(quads, [ShapeUtility.createPoint(x_split + sep, q_ty),
+                        ShapeUtility.createPoint(q_rx, q_ty),
+                        ShapeUtility.createPoint(q_rx, q_by),
+                        ShapeUtility.createPoint(x_split + sep, q_by)]);
+                }
+            }
+            else {
+                if ((q_by - q_ty) > min_diff) {
+                    let y_split = (q_by - q_ty) / 2 * s + q_ty;
+                    _.pullAt(quads, [q_index]);
+                    p.append(quads, [ShapeUtility.createPoint(q_lx, q_ty),
+                        ShapeUtility.createPoint(q_rx, q_ty),
+                        ShapeUtility.createPoint(q_rx, y_split - sep),
+                        ShapeUtility.createPoint(q_lx, y_split - sep)]);
+                    p.append(quads, [ShapeUtility.createPoint(q_lx, y_split + sep),
+                        ShapeUtility.createPoint(q_rx, y_split + sep),
+                        ShapeUtility.createPoint(q_rx, q_by),
+                        ShapeUtility.createPoint(q_lx, q_by)]);
+                }
+            }
+        }
+        p.stroke(0);
+        p.strokeWeight(2);
+        _.forEach(quads, q => {
+            const color = colors[p.int(p.random(colors.length))];
+            p.fill(color.r, color.g, color.b);
+            p.beginShape();
+            _.forEach(q, pi => {
+                p.vertex(pi.x, pi.y);
+            });
+            p.endShape(p.CLOSE);
+        });
+    };
+    p.updateSettings = (settings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
+        P5Utility.switchStaticOrFrames(p, settings.isStatic, settings.fps);
+        p.resizeCanvas(w, h);
+    };
+};
 const OffsetQuadsWall = p => {
     let w = 1000, h = 1000;
     const colors = [ColorUtility.createRGBAColor(92, 97, 130, 110),
@@ -506,13 +589,50 @@ const SimulatedCodeWall = p => {
         p.resizeCanvas(w, h);
     };
 };
+const SquarePebbles = p => {
+    let w = 1000, h = 1000;
+    const square_size = 50;
+    let square_count = w * 2 / square_size - 2;
+    let square_rows = h * 2 / square_size - 2;
+    const ran_rot = .005;
+    const ran_mov = .02;
+    const colors = [ColorUtility.createRGBColor(127, 199, 175),
+        ColorUtility.createRGBColor(218, 216, 167),
+        ColorUtility.createRGBColor(167, 219, 216),
+        ColorUtility.createRGBColor(237, 118, 112)];
+    p.draw = () => {
+        let renderer = p.createCanvas(w, h);
+        P5Utility.placeCanvasTo(p, renderer, true, -10);
+        p.background(120, 120, 120);
+        p.stroke(80, 80, 80);
+        for (let i = 0; i < square_rows; i++) {
+            for (let j = 0; j < square_count; j++) {
+                p.translate(square_size + j * square_size / 2 + (i * p.random(-ran_mov, ran_mov)), square_size + i * square_size / 2 + +(i * p.random(-ran_mov, ran_mov)));
+                const randomIndex = p.int(p.random(colors.length));
+                const c = colors[randomIndex];
+                p.fill(c.r, c.g, c.b, 255);
+                p.rotate(p.random(-i * (ran_rot + i * .003), i * (ran_rot + i * .003)));
+                p.rect(-square_size / 2, -square_size / 2, square_size / 2, square_size / 2);
+                p.resetMatrix();
+            }
+        }
+    };
+    p.updateSettings = (settings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
+        square_count = (w - square_size) * 2 / square_size - 2;
+        square_rows = (h - square_size) * 2 / square_size - 2;
+        P5Utility.switchStaticOrFrames(p, settings.isStatic, settings.fps);
+        p.resizeCanvas(w, h);
+    };
+};
 class GeneratorFactory {
     static getRandomBackground() {
         return CommonUtitlity.getRandomElement(GeneratorFactory.Backgrounds);
     }
 }
 GeneratorFactory.Backgrounds = [WatercolorClouds,
-    CirclePacking, OffsetQuadsWall, SimulatedCodeWall];
+    CirclePacking, MondrianTiles, OffsetQuadsWall, SimulatedCodeWall];
 class GeneratorSettings {
     constructor() {
         this.canvasWidth = 1000;
@@ -622,87 +742,4 @@ class StringUtility {
             .replace(/\\f/g, "\\f");
     }
 }
-const MondrianTiles = p => {
-    let w = 1000, h = 1000;
-    const subdivisions = 50000;
-    const min_diff = 80;
-    const sep = 1;
-    const colors = [ColorUtility.createRGBColor(38, 71, 124),
-        ColorUtility.createRGBColor(240, 217, 92),
-        ColorUtility.createRGBColor(162, 45, 40),
-        ColorUtility.createRGBColor(223, 224, 236),
-        ColorUtility.createRGBColor(223, 224, 236),
-        ColorUtility.createRGBColor(223, 224, 236),
-        ColorUtility.createRGBColor(223, 224, 236),
-        ColorUtility.createRGBColor(223, 224, 236)];
-    const splits = [.5, 1, 1.5];
-    const edge = 10;
-    p.draw = () => {
-        let renderer = p.createCanvas(w, h);
-        P5Utility.placeCanvasTo(p, renderer, true, -10);
-        p.pixelDensity(2);
-        p.background(255);
-        const quads = [];
-        p.append(quads, [
-            ShapeUtility.createPoint(edge, edge),
-            ShapeUtility.createPoint(w - edge, edge),
-            ShapeUtility.createPoint(w - edge, h - edge),
-            ShapeUtility.createPoint(edge, h - edge)
-        ]);
-        for (let i = 0; i < subdivisions; i++) {
-            let q_index = p.int(p.random(quads.length));
-            let q = quads[q_index];
-            let q_lx = q[0].x;
-            let q_rx = q[1].x;
-            let q_ty = q[0].y;
-            let q_by = q[2].y;
-            let s = splits[p.int(p.random(splits.length))];
-            if (p.random(1) < .5) {
-                if ((q_rx - q_lx) > min_diff) {
-                    let x_split = (q_rx - q_lx) / 2 * s + q_lx;
-                    _.pullAt(quads, [q_index]);
-                    p.append(quads, [ShapeUtility.createPoint(q_lx, q_ty),
-                        ShapeUtility.createPoint(x_split - sep, q_ty),
-                        ShapeUtility.createPoint(x_split - sep, q_by),
-                        ShapeUtility.createPoint(q_lx, q_by)]);
-                    p.append(quads, [ShapeUtility.createPoint(x_split + sep, q_ty),
-                        ShapeUtility.createPoint(q_rx, q_ty),
-                        ShapeUtility.createPoint(q_rx, q_by),
-                        ShapeUtility.createPoint(x_split + sep, q_by)]);
-                }
-            }
-            else {
-                if ((q_by - q_ty) > min_diff) {
-                    let y_split = (q_by - q_ty) / 2 * s + q_ty;
-                    _.pullAt(quads, [q_index]);
-                    p.append(quads, [ShapeUtility.createPoint(q_lx, q_ty),
-                        ShapeUtility.createPoint(q_rx, q_ty),
-                        ShapeUtility.createPoint(q_rx, y_split - sep),
-                        ShapeUtility.createPoint(q_lx, y_split - sep)]);
-                    p.append(quads, [ShapeUtility.createPoint(q_lx, y_split + sep),
-                        ShapeUtility.createPoint(q_rx, y_split + sep),
-                        ShapeUtility.createPoint(q_rx, q_by),
-                        ShapeUtility.createPoint(q_lx, q_by)]);
-                }
-            }
-        }
-        p.stroke(0);
-        p.strokeWeight(2);
-        _.forEach(quads, q => {
-            const color = colors[p.int(p.random(colors.length))];
-            p.fill(color.r, color.g, color.b);
-            p.beginShape();
-            _.forEach(q, pi => {
-                p.vertex(pi.x, pi.y);
-            });
-            p.endShape(p.CLOSE);
-        });
-    };
-    p.updateSettings = (settings) => {
-        w = settings.canvasWidth;
-        h = settings.canvasHeight;
-        P5Utility.switchStaticOrFrames(p, settings.isStatic, settings.fps);
-        p.resizeCanvas(w, h);
-    };
-};
 //# sourceMappingURL=veins.p5.js.map

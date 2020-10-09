@@ -4,6 +4,7 @@
 /// <reference path="./wall/MondrianTiles.ts" />
 /// <reference path="./wall/OffsetQuads.ts" />
 /// <reference path="./wall/SimulatedCode.ts" />
+/// <reference path="./wall/SquarePebbles.ts" />
 
 "use strict";
 
