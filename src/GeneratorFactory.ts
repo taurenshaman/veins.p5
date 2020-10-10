@@ -29,7 +29,7 @@ class GeneratorFactory {
     static readonly Backgrounds: Array<Function> = [
         ErdavidsTree,
         WatercolorClouds,
-        CirclePacking, ElementaryAutomata, MondrianTiles, OffsetQuadsWall, SimulatedCodeWall];
+        CirclePacking, CircleShadowsWall, ElementaryAutomata, MondrianTiles, OffsetQuadsWall, SimulatedCodeWall];
     static getRandomBackground(){
         return CommonUtitlity.getRandomElement(GeneratorFactory.Backgrounds);
     }

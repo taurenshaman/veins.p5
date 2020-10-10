@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
     <script src="https://taurenshaman.github.io/assets/js/lodash-uuid.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
-    <script src="../js/veins.p5.js?v=10"></script>
+    <script src="../js/veins.p5.js?v=11"></script>
 
 </head>
 
@@ -28,13 +28,12 @@
         const settings = {
             canvasWidth: container.clientWidth,
             canvasHeight: container.clientHeight,
-            isStatic: false,
+            isStatic: true,
             fps: 2,
             randomColors: false
         };
         
-        // let p5Instance = new p5(CircleShadowsWall, "container");
-        // settings.backgroundRGB = {r: 220, g: 220, b: 220};
+        let p5Instance = new p5(CircleShadowsWall, "container");
 
         // let p5Instance = new p5(WatercolorClouds, "container");
 
@@ -50,7 +49,7 @@
 
         // let p5Instance = new p5(ElementaryAutomata, "container");
 
-        let p5Instance = new p5(ErdavidsTree, "container");
+        // let p5Instance = new p5(ErdavidsTree, "container");
 
         // let generator = GeneratorFactory.getRandomWall();
         // let p5Instance = new p5(generator, "container");

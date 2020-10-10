@@ -408,17 +408,19 @@ const CirclePacking = p => {
 const CircleShadowsWall = p => {
     let w = 1000, h = 1000;
     let bgColor = {
-        r: 255,
-        g: 255,
-        b: 255
+        r: 30,
+        g: 30,
+        b: 30
     };
     const cs = 40;
-    p.updateSettings = (settings) => {
-        w = settings.canvasWidth;
-        h = settings.canvasHeight;
-        if (settings.backgroundRGB)
-            bgColor = settings.backgroundRGB;
-        p.resizeCanvas(w, h);
+    const rangesOfColor = [
+        { minR: 50, minG: 200, minB: 200 },
+        { minR: 200, minG: 50, minB: 200 },
+        { minR: 200, minG: 200, minB: 50 }
+    ];
+    p.randomRange = () => {
+        const index = CommonUtitlity.getRandomInt(rangesOfColor.length);
+        return rangesOfColor[index];
     };
     p.setup = () => {
         let renderer = p.createCanvas(w, h);
@@ -426,18 +428,27 @@ const CircleShadowsWall = p => {
         p.background(bgColor.r, bgColor.g, bgColor.b);
         p.pixelDensity(2);
         const count = w * 2;
+        const colorRange = p.randomRange();
         for (let c = 0; c < count; c++) {
             let center_x = p.random(w / 10, w - w / 10);
             let center_y = p.random(h / 10, h - h / 10);
             p.noStroke();
             p.fill(15, 15, 15, 5);
-            for (let i = 0; i < 99; i++) {
+            for (let i = 0; i < 30; i++) {
                 p.circle(center_x + 20, center_y + 20, cs - i * 5);
             }
             p.stroke(30, 30, 30);
-            p.fill(p.random(50, 255), p.random(50, 255), p.random(50, 255), p.random(50, 255));
+            p.fill(p.random(colorRange.minR, 255), p.random(colorRange.minG, 255), p.random(colorRange.minB, 255), p.random(150, 255));
             p.circle(center_x, center_y, cs);
         }
+        p.seed = p.int(p.random(10000));
+    };
+    p.updateSettings = (settings) => {
+        w = settings.canvasWidth;
+        h = settings.canvasHeight;
+        if (settings.backgroundRGB)
+            bgColor = settings.backgroundRGB;
+        p.resizeCanvas(w, h);
     };
 };
 const ElementaryAutomata = p => {
@@ -862,7 +873,7 @@ class GeneratorFactory {
 GeneratorFactory.Backgrounds = [
     ErdavidsTree,
     WatercolorClouds,
-    CirclePacking, ElementaryAutomata, MondrianTiles, OffsetQuadsWall, SimulatedCodeWall
+    CirclePacking, CircleShadowsWall, ElementaryAutomata, MondrianTiles, OffsetQuadsWall, SimulatedCodeWall
 ];
 class GeneratorSettings {
     constructor() {
