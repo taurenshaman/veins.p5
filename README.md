@@ -15,4 +15,5 @@
 try: test/hello.html
 
 ### About
-[veins.p5](https://github.com/taurenshaman/veins.p5) is matained by [Veins.Design](https://veins.design/)
+* [veins.p5](https://github.com/taurenshaman/veins.p5) is maintained by [Veins.Design](https://veins.design/)
+* [veins.skiasharp](https://github.com/taurenshaman/veins.skiasharp) is about Hash/Generative/Random art, developed using Net Core and SkiaSharp.
