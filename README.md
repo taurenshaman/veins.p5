@@ -13,3 +13,6 @@
 
 ### Demo
 try: test/hello.html
+
+### About
+[veins.p5](https://github.com/taurenshaman/veins.p5) is matained by [Veins.Design](https://veins.design/)
